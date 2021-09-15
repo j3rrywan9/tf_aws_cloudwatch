@@ -13,6 +13,11 @@ variable "server_port" {
   description = "The port the server will use for HTTP requests"
 }
 
+variable "container_port" {
+  description = "Docker container port"
+  type = number
+}
+
 variable "vpn_cidr_blocks" {
   description = "VPN CIDR blocks"
 }

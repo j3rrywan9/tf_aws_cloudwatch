@@ -51,6 +51,18 @@ resource "aws_security_group_rule" "http_vpn_access" {
   security_group_id = aws_security_group.alb.id
 }
 
+resource "aws_security_group_rule" "alb_allow_all" {
+  description = "Allow all outbound traffic from ALB"
+  type = "egress"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = [
+    "0.0.0.0/0",
+  ]
+  security_group_id = aws_security_group.alb.id
+}
+
 resource "aws_security_group" "asg" {
   name        = "${var.security_group_name_prefix}-asg"
   description = "CloudWatch demo ASG security group"
@@ -66,6 +78,16 @@ resource "aws_security_group" "asg" {
   }
 }
 
+resource "aws_security_group_rule" "alb_access_via_container_port" {
+  description = "ASG access from ALB via container port"
+  type = "ingress"
+  from_port   = var.container_port
+  to_port     = var.container_port
+  protocol    = "tcp"
+  source_security_group_id = aws_security_group.alb.id
+  security_group_id = aws_security_group.asg.id
+}
+
 resource "aws_security_group_rule" "asg_allow_all" {
   description = "Allow all outbound traffic from ASG"
   type = "egress"
@@ -76,4 +98,30 @@ resource "aws_security_group_rule" "asg_allow_all" {
     "0.0.0.0/0",
   ]
   security_group_id = aws_security_group.asg.id
+}
+
+resource "aws_security_group" "db_server" {
+  name        = "${var.security_group_name_prefix}-db"
+  description = "SonarQube DB server security group"
+  vpc_id      = var.vpc_id
+
+  tags = {
+    Name         = "${var.security_group_name_prefix}-db"
+    Terraform    = "true"
+  }
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    description = "Postgres access from EC2"
+    security_groups = [
+      aws_security_group.asg.id,
+    ]
+    cidr_blocks = var.vpn_cidr_blocks
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
