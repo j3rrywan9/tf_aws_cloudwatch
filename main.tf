@@ -64,3 +64,14 @@ module "sns" {
   recipient        = var.alert_email_address
   cw_demo_asg_name = module.asg.cw_demo_asg_name
 }
+
+module "cloudwatch" {
+  source                   = "./modules/terraform-aws-cloudwatch"
+  alert_arn                = module.sns.alert_arn
+  environment              = var.environment
+  db_server_instance       = var.db_server_instance
+  db_identifier            = module.rds.db_identifier
+  asg_name                 = module.asg.cw_demo_asg_name
+  load_balancer_identifier = module.alb.alb_identifier
+  target_group_identifier  = module.alb.alb_target_group_arn
+}

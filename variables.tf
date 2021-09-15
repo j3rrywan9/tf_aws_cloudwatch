@@ -20,6 +20,12 @@ variable "aws_secret_key" {
   description = "AWS secret key"
 }
 
+variable "environment" {
+  description = "What environment is this going to be, staging or production"
+  type        = string
+  default     = "staging"
+}
+
 variable "vpn_cidr_blocks" {
   description = "VPN CIDR blocks"
   type        = list(string)
