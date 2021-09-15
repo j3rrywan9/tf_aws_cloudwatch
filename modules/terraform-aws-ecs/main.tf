@@ -43,6 +43,20 @@ resource "aws_ecs_task_definition" "cw_demo_taskdef" {
       name      = var.container_name
       image     = "sonarqube:8.9.2-enterprise"
       essential = true
+      environment = [
+        {
+          name  = "SONAR_JDBC_URL"
+          value = var.sonar_jdbc_url
+        },
+        {
+          name  = "SONAR_JDBC_USERNAME"
+          value = var.sonar_jdbc_username
+        },
+        {
+          name  = "SONAR_JDBC_PASSWORD"
+          value = var.sonar_jdbc_password
+        },
+      ]
       ulimits = [
         {
           name = "nofile"
