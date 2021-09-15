@@ -16,3 +16,19 @@ data "aws_subnet_ids" "default" {
     type = "default"
   }
 }
+
+data "template_file" "init" {
+  template = file("${path.module}/templates/ec2-init.sh.tpl")
+
+  vars = {
+    db_server_hostname  = module.rds.db_server_hostname
+    db_name             = var.db_name
+    master_db_username  = var.master_db_username
+    master_db_password  = var.master_db_password
+    db_server_hostname  = module.rds.db_server_hostname
+    sonar_jdbc_url      = module.rds.sonar_jdbc_url
+    sonar_jdbc_username = var.sonar_jdbc_username
+    sonar_jdbc_password = var.sonar_jdbc_password
+    ecs_cluster_name    = var.ecs_cluster_name
+  }
+}
