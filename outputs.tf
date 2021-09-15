@@ -9,3 +9,7 @@ output "vpc_id" {
 output "default_subnet_ids" {
   value = data.aws_subnet_ids.default.ids
 }
+
+output "alb_dns_name" {
+  value = module.alb.alb_dns_name
+}
