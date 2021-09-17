@@ -39,6 +39,7 @@ module "ecs" {
   ecs_cluster_name          = var.ecs_cluster_name
   cw_demo_asg_arn           = module.asg.cw_demo_asg_arn
   container_name            = var.container_name
+  docker_image              = var.docker_image
   container_port            = var.container_port
   alb_target_group_arn      = module.alb.alb_target_group_arn
   sonar_jdbc_url            = module.rds.sonar_jdbc_url

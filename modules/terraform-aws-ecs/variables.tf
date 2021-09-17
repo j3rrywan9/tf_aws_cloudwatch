@@ -22,6 +22,11 @@ variable "container_name" {
   type        = string
 }
 
+variable "docker_image" {
+  description = "The Docker image"
+  type        = string
+}
+
 variable "container_port" {
   description = "Docker container port"
   type = number

@@ -41,7 +41,7 @@ resource "aws_ecs_task_definition" "cw_demo_taskdef" {
   container_definitions = jsonencode([
     {
       name      = var.container_name
-      image     = "sonarqube:8.9.2-enterprise"
+      image     = var.docker_image
       essential = true
       environment = [
         {

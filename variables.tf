@@ -62,6 +62,12 @@ variable "container_name" {
   default     = "sonarqube"
 }
 
+variable "docker_image" {
+  description = "The Docker image"
+  type        = string
+  default     = "sonarqube:8.9.2-community"
+}
+
 variable "container_port" {
   description = "Docker container port"
   type        = number
