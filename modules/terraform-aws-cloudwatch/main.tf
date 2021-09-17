@@ -1,3 +1,8 @@
+resource "aws_cloudwatch_log_group" "sonarqube_container_log_group" {
+  name              = "sonarqube-container"
+  retention_in_days = 7
+}
+
 resource "aws_cloudwatch_metric_alarm" "db_diskusage" {
   alarm_name          = "tf-${var.db_server_instance}-diskusage-alarm"
   comparison_operator = "LessThanOrEqualToThreshold"

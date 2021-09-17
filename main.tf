@@ -34,15 +34,17 @@ module "asg" {
 }
 
 module "ecs" {
-  source               = "./modules/terraform-aws-ecs"
-  ecs_cluster_name     = var.ecs_cluster_name
-  cw_demo_asg_arn      = module.asg.cw_demo_asg_arn
-  container_name       = var.container_name
-  container_port       = var.container_port
-  alb_target_group_arn = module.alb.alb_target_group_arn
-  sonar_jdbc_url       = module.rds.sonar_jdbc_url
-  sonar_jdbc_username  = var.sonar_jdbc_username
-  sonar_jdbc_password  = var.sonar_jdbc_password
+  source                    = "./modules/terraform-aws-ecs"
+  aws_region                = var.aws_region
+  ecs_cluster_name          = var.ecs_cluster_name
+  cw_demo_asg_arn           = module.asg.cw_demo_asg_arn
+  container_name            = var.container_name
+  container_port            = var.container_port
+  alb_target_group_arn      = module.alb.alb_target_group_arn
+  sonar_jdbc_url            = module.rds.sonar_jdbc_url
+  sonar_jdbc_username       = var.sonar_jdbc_username
+  sonar_jdbc_password       = var.sonar_jdbc_password
+  cloudwatch_log_group_name = module.cloudwatch.sonarqube_container_log_group_name
 }
 
 module "rds" {

@@ -70,6 +70,13 @@ resource "aws_ecs_task_definition" "cw_demo_taskdef" {
           protocol      = "tcp"
         }
       ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-region = var.aws_region
+          awslogs-group = var.cloudwatch_log_group_name
+        }
+      }
       requiresCompatibilities = [
         "EC2"
       ]
