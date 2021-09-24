@@ -1,3 +1,78 @@
+resource "aws_iam_role" "sonarqube_server_instance_role" {
+  name = "sonarqube-server-instance-role"
+  assume_role_policy = jsonencode(
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Action": "sts:AssumeRole",
+          "Principal": {
+            "Service": "ec2.amazonaws.com"
+          },
+          "Effect": "Allow"
+        }
+      ]
+    }
+  )
+
+  tags = {
+    Name      = "CloudWatch demo"
+    Terraform = "true"
+  }
+}
+
+resource "aws_iam_policy" "sonarqube_server_policy" {
+  name = "sonarqube-server-policy"
+  policy = jsonencode(
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "ec2:DescribeTags",
+            "ecs:CreateCluster",
+            "ecs:DeregisterContainerInstance",
+            "ecs:DiscoverPollEndpoint",
+            "ecs:Poll",
+            "ecs:RegisterContainerInstance",
+            "ecs:StartTelemetrySession",
+            "ecs:UpdateContainerInstancesState",
+            "ecs:Submit*",
+            "ecr:GetAuthorizationToken",
+            "ecr:BatchCheckLayerAvailability",
+            "ecr:GetDownloadUrlForLayer",
+            "ecr:BatchGetImage",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+          ],
+          "Resource": "*"
+        }
+      ]
+    }
+  )
+
+  tags = {
+    Name      = "CloudWatch demo"
+    Terraform = "true"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "sonarqube_server_policy_attachment" {
+  role = aws_iam_role.sonarqube_server_instance_role.name
+  policy_arn = aws_iam_policy.sonarqube_server_policy.arn  
+}
+
+resource "aws_iam_instance_profile" "sonarqube_server_instance_profile" {
+  name = "sonarqube-server-instance-profile"
+  role = aws_iam_role.sonarqube_server_instance_role.name
+
+  tags = {
+    Name      = "CloudWatch demo"
+    Terraform = "true"
+  }
+}
+
 resource "aws_launch_template" "cw_demo_lt" {
   name_prefix   = "cw-demo-lt-"
   image_id      = var.image_id
@@ -7,7 +82,7 @@ resource "aws_launch_template" "cw_demo_lt" {
   vpc_security_group_ids = var.vpc_security_group_ids
 
   iam_instance_profile {
-    arn = "arn:aws:iam::950350094460:instance-profile/ecsInstanceRole"
+    arn = aws_iam_instance_profile.sonarqube_server_instance_profile.arn
   }
 
   user_data = "${base64encode(<<EOF
