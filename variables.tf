@@ -65,7 +65,7 @@ variable "container_name" {
 variable "docker_image" {
   description = "The Docker image"
   type        = string
-  default     = "sonarqube:8.9.2-community"
+  default     = "sonarqube:8.9.3-community"
 }
 
 variable "container_port" {
